@@ -40,10 +40,10 @@ output HDMI-A-5 resolution 1920x1080 position 3840,0
 # Example configuration:
 #
 exec swayidle -w \
-         timeout 300 'swaylock -f -c 000000' \
+         timeout 300 'swaylock -F -f -c 000000' \
          timeout 600 'swaymsg "output * dpms off"' \
               resume 'swaymsg "output * dpms on"' \
-         before-sleep 'swaylock -f -c 000000'
+         before-sleep 'swaylock -F -f -c 000000'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -77,7 +77,7 @@ exec swayidle -w \
     bindsym $mod+d exec $menu
 
     # Lock
-    bindsym $mod+g exec swaylock -f -c 000000
+    bindsym $mod+g exec swaylock -F -f -c 000000
 
     # Screenshot
     bindsym Print exec grimshot --notify copy screen
