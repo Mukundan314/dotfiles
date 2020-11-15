@@ -1,0 +1,4 @@
+[[plugins]]
+repo = 'iamcco/markdown-preview.nvim'
+build = 'sh -c "cd app & npm install"'
+on_ft = 'markdown'

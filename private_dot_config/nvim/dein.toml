@@ -1,0 +1,11 @@
+[[plugins]]
+repo = 'Shougo/dein.vim'
+
+[[plugins]]
+repo = 'sheerun/vim-polyglot'
+
+[[plugins]]
+repo = 'easymotion/vim-easymotion'
+
+[[plugins]]
+repo = 'airblade/vim-gitgutter'

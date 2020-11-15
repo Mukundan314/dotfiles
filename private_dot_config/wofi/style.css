@@ -1,0 +1,21 @@
+#window {
+  border-radius: .25em;
+}
+
+#outer-box {
+  margin: 1em;
+}
+
+#input {
+  border: none;
+  border-radius: 0;
+  margin-bottom: 1em;
+}
+
+#entry {
+  padding: .5em;
+}
+
+image {
+  margin-right: .75em;
+}

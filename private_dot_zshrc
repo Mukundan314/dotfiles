@@ -1,0 +1,68 @@
+# Set options {{{
+HISTFILE=~/.histfile
+HISTSIZE=10000
+SAVEHIST=10000
+
+KEYTIMEOUT=1
+
+setopt autocd
+setopt beep
+setopt extendedglob
+setopt hist_ignore_all_dups
+setopt interactivecomments
+setopt nomatch
+setopt notify
+
+bindkey -v
+# }}}
+
+# Load zdharma/zinit {{{
+if [[ ! -f ${ZINIT[BIN_DIR]}/zinit.zsh ]]; then
+  print -P "%F{220}Installing Plugin Manager (zdharma/zinit)...%f"
+  mkdir -m g-rwX -p "${ZINIT[HOME_DIR]}"
+  git clone https://github.com/zdharma/zinit "${ZINIT[BIN_DIR]}" && \
+    print -P "%F{34}Installation successful.%f%b" || \
+    print -P "%F{160}The clone has failed.%f%b"
+fi
+
+source "${ZINIT[BIN_DIR]}/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+# }}}
+
+# Load Plugins {{{
+zinit ice depth=1
+
+zinit light romkatv/powerlevel10k
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-syntax-highlighting
+
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# }}}
+
+# Plugin Config {{{
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+# }}}
+
+# Setup completion {{{
+zstyle ':completion:*' completer _expand _complete _ignored _prefix
+zstyle ':completion:*' expand prefix
+zstyle ':completion:*' insert-unambiguous true
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-suffixes true
+
+autoload -Uz compinit
+compinit -d .cache/zcompdump
+
+zinit cdreplay
+# }}}
+
+# Setup aliases {{{
+alias diff='diff --color=auto'
+alias grep='grep --color=auto'
+alias ip='ip -color=auto'
+alias ls='ls --color=auto'
+
+alias vi=nvim
+# }}}
