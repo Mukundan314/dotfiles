@@ -9,3 +9,6 @@ repo = 'easymotion/vim-easymotion'
 
 [[plugins]]
 repo = 'airblade/vim-gitgutter'
+
+[[plugins]]
+repo = 'morhetz/gruvbox'

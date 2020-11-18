@@ -1,0 +1,10 @@
+let g:gruvbox_italic = 1
+let g:gruvbox_number_column = 'bg2'
+
+{{ if ( eq .colorscheme "gruvbox_dark" ) }}
+set background=dark
+colorscheme gruvbox
+{{ else if ( eq .colorscheme "gruvbox_light" ) }}
+set background=light
+colorscheme gruvbox
+{{ end }}
