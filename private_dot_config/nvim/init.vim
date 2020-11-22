@@ -1,9 +1,11 @@
 set clipboard+=unnamedplus
 set colorcolumn=80,120
+set cursorline
 set foldmethod=marker
 set number
 set relativenumber
 set signcolumn=yes
+set termguicolors
 set updatetime=100
 
 let mapleader = ' '
