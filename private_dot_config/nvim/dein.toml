@@ -12,3 +12,6 @@ repo = 'airblade/vim-gitgutter'
 
 [[plugins]]
 repo = 'morhetz/gruvbox'
+
+[[plugins]]
+repo = 'arcticicestudio/nord-vim'
