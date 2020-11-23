@@ -19,3 +19,6 @@ repo = 'arcticicestudio/nord-vim'
 [[plugins]]
 repo = 'dracula/vim'
 name = 'dracula-vim'
+
+[[plugins]]
+repo = 'mhinz/vim-startify'
