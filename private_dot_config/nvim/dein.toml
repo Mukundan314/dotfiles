@@ -22,3 +22,6 @@ name = 'dracula-vim'
 
 [[plugins]]
 repo = 'mhinz/vim-startify'
+
+[[plugins]]
+repo = 'vim-airline/vim-airline'
