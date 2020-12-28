@@ -10,7 +10,7 @@ set updatetime=100
 
 let mapleader = ' '
 
-let g:python3_host_prog = expand('~/.local/share/virtualenv/neovim/3.8/bin/python')
+let g:python3_host_prog = expand('~/.local/share/virtualenv/neovim/3.9/bin/python')
 let g:ruby_host_prog = trim(system('ruby -e "puts Gem.user_dir"')) . '/bin/neovim-ruby-host'
 let g:node_host_prog = expand('~/.npm-global/bin/neovim-node-host')
 
