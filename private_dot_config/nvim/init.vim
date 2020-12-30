@@ -7,6 +7,7 @@ set relativenumber
 set signcolumn=yes
 set termguicolors
 set updatetime=100
+set inccommand=nosplit
 
 let mapleader = ' '
 
