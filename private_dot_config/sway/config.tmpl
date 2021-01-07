@@ -29,6 +29,7 @@ set $menu wofi --show drun
 #
 #   output HDMI-A-1 resolution 1920x1080 position 1920,0
 #
+output * bg {{ .colors.color_0 }} solid_color
 output HDMI-A-6 resolution 1920x1080 position 0,0
 output HDMI-A-1 resolution 1920x1080 position 1920,0
 output HDMI-A-5 resolution 1920x1080 position 3840,0
@@ -229,9 +230,13 @@ bar {
     status_command while date +'%Y-%m-%d %l:%M:%S %p'; do sleep 1; done
 
     colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
+        statusline {{ .colors.foreground }}
+        background {{ .colors.background }}
+
+        focused_workspace  {{ .colors.color_0 }}    {{ .colors.color_0 }}    {{ .colors.color_15 }}
+        active_workspace   {{ .colors.color_0 }}    {{ .colors.color_0 }}    {{ .colors.color_7 }}
+        inactive_workspace {{ .colors.background }} {{ .colors.background }} {{ .colors.color_8 }}
+        urgent_workspace   {{ .colors.color_1 }}    {{ .colors.color_1 }}    {{ .colors.color_15 }}
     }
 }
 
