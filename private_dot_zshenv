@@ -14,8 +14,5 @@ export GOPATH=$(go env GOPATH)
 export MOZ_ENABLE_WAYLAND=1
 
 typeset -U PATH path
-path=(
-    "$HOME/bin" "$HOME/.local/bin" "$GOPATH/bin" "$(npm prefix -g)/bin"
-    "$(ruby -e 'puts Gem.user_dir')/bin" "$path[@]"
-)
+path=("$HOME/bin" "$HOME/.local/bin" "$GOPATH/bin" "$path[@]")
 export PATH

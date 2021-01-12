@@ -30,20 +30,18 @@ autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 # }}}
 
-# Load Plugins {{{
-zinit ice depth=1
-
-zinit light lukechilds/zsh-nvm
-zinit light romkatv/powerlevel10k
-zinit light zsh-users/zsh-autosuggestions
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-syntax-highlighting
-
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# Powerlevel10k Instant Prompt {{{
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 # }}}
 
-# Plugin Config {{{
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+# Load Plugins {{{
+zinit lucid light-mode for \
+  wait lukechilds/zsh-nvm \
+  depth=1 atload='source ~/.p10k.zsh' nocd romkatv/powerlevel10k \
+  wait atload='!_zsh_autosuggest_start' zsh-users/zsh-autosuggestions \
+  wait atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" zdharma/fast-syntax-highlighting
 # }}}
 
 # Setup completion {{{
@@ -55,8 +53,6 @@ zstyle ':completion:*' list-suffixes true
 
 autoload -Uz compinit
 compinit -d .cache/zcompdump
-
-zinit cdreplay
 # }}}
 
 # Setup aliases {{{
@@ -68,5 +64,5 @@ alias ls='ls --color=auto'
 alias vi=nvim
 # }}}
 
-export GPG_TTY=$(tty)
+export GPG_TTY=$TTY
 gpg-connect-agent updatestartuptty /bye >/dev/null

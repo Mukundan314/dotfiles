@@ -13,7 +13,7 @@ let mapleader = ' '
 
 let g:python3_host_prog = expand('~/.local/share/virtualenv/neovim/3.9/bin/python')
 let g:ruby_host_prog = trim(system('ruby -e "puts Gem.user_dir"')) . '/bin/neovim-ruby-host'
-let g:node_host_prog = expand('~/.npm-global/bin/neovim-node-host')
+let g:node_host_prog = trim(system('npm prefix -g')) . '/bin/neovim-node-host'
 
 let g:loaded_python_provider = 1  " Disable Python 2 support
 "let g:loaded_python3_provider = 1 " Disable Python 3 support
