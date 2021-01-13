@@ -26,8 +26,6 @@ if [[ ! -f ${ZINIT[BIN_DIR]}/zinit.zsh ]]; then
 fi
 
 source "${ZINIT[BIN_DIR]}/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
 # }}}
 
 # Powerlevel10k Instant Prompt {{{
@@ -38,21 +36,18 @@ fi
 
 # Load Plugins {{{
 zinit lucid light-mode for \
+  depth=1 atload='source ~/.p10k.zsh' romkatv/powerlevel10k \
   wait lukechilds/zsh-nvm \
-  depth=1 atload='source ~/.p10k.zsh' nocd romkatv/powerlevel10k \
-  wait atload='!_zsh_autosuggest_start' zsh-users/zsh-autosuggestions \
-  wait atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" zdharma/fast-syntax-highlighting
+  wait atinit="ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" zdharma/fast-syntax-highlighting \
+  wait atload='!_zsh_autosuggest_start' zsh-users/zsh-autosuggestions
 # }}}
 
-# Setup completion {{{
+# Configure completion {{{
 zstyle ':completion:*' completer _expand _complete _ignored _prefix
 zstyle ':completion:*' expand prefix
 zstyle ':completion:*' insert-unambiguous true
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-suffixes true
-
-autoload -Uz compinit
-compinit -d .cache/zcompdump
 # }}}
 
 # Setup aliases {{{
