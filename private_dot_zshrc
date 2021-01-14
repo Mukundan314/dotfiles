@@ -42,6 +42,11 @@ zinit lucid light-mode for \
   wait atload='!_zsh_autosuggest_start' zsh-users/zsh-autosuggestions
 # }}}
 
+# Configure Plugins {{{
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_USE_ASYNC=1
+# }}}
+
 # Configure completion {{{
 zstyle ':completion:*' completer _expand _complete _ignored _prefix
 zstyle ':completion:*' expand prefix
