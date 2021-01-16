@@ -5,6 +5,9 @@ repo = 'Shougo/dein.vim'
 repo = 'sheerun/vim-polyglot'
 
 [[plugins]]
+repo = 'editorconfig/editorconfig-vim'
+
+[[plugins]]
 repo = 'easymotion/vim-easymotion'
 
 [[plugins]]
