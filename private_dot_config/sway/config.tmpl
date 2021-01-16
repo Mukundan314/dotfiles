@@ -225,13 +225,18 @@ bindsym $mod+r mode "resize"
 bar {
     position top
 
+    separator_symbol ''
+    status_padding 0
+
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
-    status_command while date +'%Y-%m-%d %l:%M:%S %p'; do sleep 1; done
+    status_command ~/.config/sway/bar
 
     colors {
-        statusline {{ .colors.foreground }}
         background {{ .colors.background }}
+        statusline {{ .colors.foreground }}
+
+        separator {{ .colors.color_8 }}
 
         focused_workspace  {{ .colors.color_0 }}    {{ .colors.color_0 }}    {{ .colors.color_15 }}
         active_workspace   {{ .colors.color_0 }}    {{ .colors.color_0 }}    {{ .colors.color_7 }}

@@ -1,0 +1,168 @@
+#!/bin/env python
+import asyncio
+import json
+import sys
+import time
+
+import psutil
+
+
+class Block(dict):
+    instance = 0
+
+    def __init__(self, **kwargs):
+        super().__init__(kwargs)
+        self["instance"] = str(type(self).instance)
+        type(self).instance += 1
+
+    async def handle_event(self, **kwargs):
+        pass
+
+
+class CpuBlock(Block):
+    def __init__(self, fmt, **kwargs):
+        super().__init__(**kwargs)
+        self["name"] = f"cpu"
+        self._fmt = fmt
+        asyncio.create_task(self.loop())
+
+    async def loop(self):
+        while True:
+            await asyncio.gather(asyncio.sleep(1), self.refresh())
+
+    async def refresh(self):
+        self["full_text"] = self._fmt.format(psutil.cpu_percent())
+
+
+class MemoryBlock(Block):
+    def __init__(self, fmt, **kwargs):
+        super().__init__(**kwargs)
+        self["name"] = f"memory"
+        self._fmt = fmt
+        asyncio.create_task(self.loop())
+
+    async def loop(self):
+        while True:
+            await asyncio.gather(asyncio.sleep(1), self.refresh())
+
+    async def refresh(self):
+        memory = psutil.virtual_memory()
+        used = memory.total - memory.available
+        self["full_text"] = self._fmt.format(used / 1073741824)
+
+
+class TimeBlock(Block):
+    def __init__(self, fmt, **kwargs):
+        super().__init__(**kwargs)
+        self["name"] = f"time"
+        self._fmt = fmt
+        asyncio.create_task(self.loop())
+
+    async def loop(self):
+        while True:
+            await asyncio.gather(asyncio.sleep(1), self.refresh())
+
+    async def refresh(self):
+        self["full_text"] = time.strftime(self._fmt)
+
+
+class VolumeBlock(Block):
+    @staticmethod
+    async def get_volume():
+        proc = await asyncio.create_subprocess_shell(
+            r"pacmd list-sinks | grep -Pzo '(?s)\* index.*?\n\s*volume:.*?\K\d+(?=%)'",
+            stdout=asyncio.subprocess.PIPE,
+        )
+        stdout, _ = await proc.communicate()
+        return stdout[:-1].decode()
+
+    @staticmethod
+    async def increase_volume():
+        proc = await asyncio.create_subprocess_shell(
+            r"pactl set-sink-volume @DEFAULT_SINK@ +5%")
+        await proc.wait()
+
+    @staticmethod
+    async def decrease_volume():
+        proc = await asyncio.create_subprocess_shell(
+            r"pactl set-sink-volume @DEFAULT_SINK@ -5%")
+        await proc.wait()
+
+    def __init__(self, fmt, **kwargs):
+        super().__init__(**kwargs)
+        self["name"] = f"volume"
+        self._fmt = fmt
+        asyncio.create_task(self.loop())
+
+    async def handle_event(self, button, **kwargs):
+        if button == 4:
+            await VolumeBlock.increase_volume()
+        elif button == 5:
+            await VolumeBlock.decrease_volume()
+        await self.refresh()
+
+    async def loop(self):
+        while True:
+            await asyncio.gather(asyncio.sleep(1), self.refresh())
+
+    async def refresh(self):
+        self["full_text"] = self._fmt.format(await VolumeBlock.get_volume())
+
+
+async def handle_events(blocks):
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(None, input)
+    while True:
+        inp = await loop.run_in_executor(None, input)
+        event = json.loads(inp.strip(" ,"))
+        for block in blocks:
+            if block["name"] == event["name"] and block["instance"] == event["instance"]:
+                asyncio.create_task(block.handle_event(**event))
+
+
+async def main():
+    blocks = [
+        Block(
+            name="",
+            full_text=" ",
+            separator_block_width=25,
+        ),
+        CpuBlock(
+            " {:.1f}%",
+            min_width=" 100.0%",
+            align="center",
+            separator_block_width=25,
+        ),
+        MemoryBlock(
+            " {:.1f} GiB",
+            min_width=" 16.0 GiB",
+            align="center",
+            separator_block_width=25,
+        ),
+        VolumeBlock(
+            "墳 {}%",
+            min_width="墳 100%",
+            align="center",
+            separator_block_width=25,
+        ),
+        TimeBlock(
+            " %a %b %d %Y",
+            separator_block_width=25,
+        ),
+        TimeBlock(
+            " %I:%M:%S %p",
+            separator_block_width=25,
+        ),
+    ]
+
+    asyncio.create_task(handle_events(blocks))
+
+    print('{"version": 1, "click_events": true}')
+    print("[")
+    while True:
+        print(json.dumps(blocks), ",", flush=True)
+        await asyncio.sleep(0.1)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
