@@ -3,6 +3,8 @@ ZDOTDIR=$HOME
 declare -A ZINIT
 ZINIT[HOME_DIR]=$HOME/.zinit
 ZINIT[BIN_DIR]=${ZINIT[HOME_DIR]}/bin
+ZINIT[ZCOMPDUMP_PATH]=$HOME/.cache/zcompdump
+ZINIT[COMPINIT_OPTS]=-C
 
 export BROWSER=firefox
 export EDITOR=vi
