@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/home/mukundan/.config/sway/.env/bin/python
 import asyncio
 import json
 import sys
@@ -47,8 +47,7 @@ class MemoryBlock(Block):
 
     async def refresh(self):
         memory = psutil.virtual_memory()
-        used = memory.total - memory.available
-        self["full_text"] = self._fmt.format(used / 1073741824)
+        self["full_text"] = self._fmt.format(memory.used / 1073741824)
 
 
 class TimeBlock(Block):
@@ -70,7 +69,7 @@ class VolumeBlock(Block):
     @staticmethod
     async def get_volume():
         proc = await asyncio.create_subprocess_shell(
-            r"pacmd list-sinks | grep -Pzo '(?s)\* index.*?\n\s*volume:.*?\K\d+(?=%)'",
+            r'pactl list sinks | grep -Pzo "(?s)Name: $(pactl info | grep -Po "(?<=Sink: ).*").*?\Volume:.*?\K\d+(?=%)"',
             stdout=asyncio.subprocess.PIPE,
         )
         stdout, _ = await proc.communicate()
@@ -79,13 +78,15 @@ class VolumeBlock(Block):
     @staticmethod
     async def increase_volume():
         proc = await asyncio.create_subprocess_shell(
-            r"pactl set-sink-volume @DEFAULT_SINK@ +5%")
+            r"pactl set-sink-volume @DEFAULT_SINK@ +5%"
+        )
         await proc.wait()
 
     @staticmethod
     async def decrease_volume():
         proc = await asyncio.create_subprocess_shell(
-            r"pactl set-sink-volume @DEFAULT_SINK@ -5%")
+            r"pactl set-sink-volume @DEFAULT_SINK@ -5%"
+        )
         await proc.wait()
 
     def __init__(self, fmt, **kwargs):
@@ -116,7 +117,10 @@ async def handle_events(blocks):
         inp = await loop.run_in_executor(None, input)
         event = json.loads(inp.strip(" ,"))
         for block in blocks:
-            if block["name"] == event["name"] and block["instance"] == event["instance"]:
+            if (
+                block["name"] == event["name"]
+                and block["instance"] == event["instance"]
+            ):
                 asyncio.create_task(block.handle_event(**event))
 
 
