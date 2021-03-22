@@ -6,14 +6,12 @@ ZINIT[BIN_DIR]=${ZINIT[HOME_DIR]}/bin
 ZINIT[ZCOMPDUMP_PATH]=$HOME/.cache/zcompdump
 ZINIT[COMPINIT_OPTS]=-C
 
-export BROWSER=firefox
+export BROWSER=chromium
 export EDITOR=vi
-export TERMINAL=alacritty
+export TERMINAL=kitty
 export VISUAL=nvim
 
 export GOPATH=$(go env GOPATH)
-
-export MOZ_ENABLE_WAYLAND=1
 
 typeset -U PATH path
 path=("$HOME/bin" "$HOME/.local/bin" "$GOPATH/bin" "$path[@]")
