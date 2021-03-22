@@ -5,6 +5,8 @@ SAVEHIST=10000
 
 KEYTIMEOUT=1
 
+ZLE_RPROMPT_INDENT=0
+
 setopt autocd
 setopt beep
 setopt extendedglob
@@ -35,10 +37,16 @@ fi
 # }}}
 
 # Load Plugins {{{
+zinit lucid light-mode wait run-atpull for \
+  has="kitty" atclone="kitty + complete setup zsh > _kitty" atpull="%atclone" as="completion" id-as="_kitty" zdharma/null \
+  has="pipenv" atclone="pipenv --completion > _pipenv" atpull="%atclone" as="completion" id-as="_pipenv" zdharma/null \
+  has="pip" atclone="pip completion --zsh > pip_completion.zsh" atpull="%atclone" id-as="_pip" zdharma/null
+
 zinit lucid light-mode for \
-  depth=1 atload='source ~/.p10k.zsh' romkatv/powerlevel10k \
+  depth=1 atload='source "$HOME/.p10k$([ $TERM = "linux" ] && echo "-ascii").zsh"' romkatv/powerlevel10k \
   wait lukechilds/zsh-nvm \
-  wait atinit="ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" zdharma/fast-syntax-highlighting \
+  wait atinit="zicompinit; zicdreplay" zdharma/fast-syntax-highlighting \
+  wait blockf zsh-users/zsh-completions \
   wait atload='!_zsh_autosuggest_start' zsh-users/zsh-autosuggestions
 # }}}
 
@@ -56,6 +64,12 @@ zstyle ':completion:*' list-suffixes true
 # }}}
 
 # Setup aliases {{{
+if [[ $TERM == 'xterm-kitty' ]]; then
+  alias ssh='kitty +kitten ssh'
+  alias icat='kitty +kitten icat'
+  alias hg='kitty +kitten hyperlinked_grep'
+fi
+
 alias diff='diff --color=auto'
 alias grep='grep --color=auto'
 alias ip='ip -color=auto'
