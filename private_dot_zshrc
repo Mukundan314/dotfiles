@@ -44,7 +44,7 @@ zinit lucid light-mode wait run-atpull for \
 
 zinit lucid light-mode for \
   depth=1 atload='source "$HOME/.p10k$([ $TERM = "linux" ] && echo "-ascii").zsh"' romkatv/powerlevel10k \
-  wait lukechilds/zsh-nvm \
+  wait @asdf-vm/asdf \
   wait atinit="zicompinit; zicdreplay" zdharma/fast-syntax-highlighting \
   wait blockf zsh-users/zsh-completions \
   wait atload='!_zsh_autosuggest_start' zsh-users/zsh-autosuggestions
