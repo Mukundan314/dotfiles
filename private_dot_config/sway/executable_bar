@@ -76,38 +76,66 @@ class VolumeBlock(Block):
         return stdout[:-1].decode()
 
     @staticmethod
+    async def get_muted():
+        proc = await asyncio.create_subprocess_shell(
+            r'pactl list sinks | grep -Pzo "(?s)Name: $(pactl info | grep -Po "(?<=Sink: ).*").*?\Mute: \K.*?(?=\n)"',
+            stdout=asyncio.subprocess.PIPE,
+        )
+        stdout, _ = await proc.communicate()
+        return stdout[:-1].decode() == "yes"
+
+    @staticmethod
+    async def toggle_mute_volume():
+        proc = await asyncio.create_subprocess_shell(
+            r"pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        )
+        await proc.wait()
+
+    @staticmethod
     async def increase_volume():
         proc = await asyncio.create_subprocess_shell(
-            r"pactl set-sink-volume @DEFAULT_SINK@ +5%"
+            r"pactl set-sink-volume @DEFAULT_SINK@ +5%",
         )
         await proc.wait()
 
     @staticmethod
     async def decrease_volume():
         proc = await asyncio.create_subprocess_shell(
-            r"pactl set-sink-volume @DEFAULT_SINK@ -5%"
+            r"pactl set-sink-volume @DEFAULT_SINK@ -5%",
         )
         await proc.wait()
 
-    def __init__(self, fmt, **kwargs):
+    def __init__(self, fmt, normal_icon, muted_icon, **kwargs):
         super().__init__(**kwargs)
         self["name"] = f"volume"
         self._fmt = fmt
+        self.normal_icon = normal_icon
+        self.muted_icon = muted_icon
         asyncio.create_task(self.loop())
 
     async def handle_event(self, button, **kwargs):
-        if button == 4:
+        if button == 3:
+            await VolumeBlock.toggle_mute_volume()
+        elif button == 4:
             await VolumeBlock.increase_volume()
         elif button == 5:
             await VolumeBlock.decrease_volume()
-        await self.refresh()
 
     async def loop(self):
-        while True:
-            await asyncio.gather(asyncio.sleep(1), self.refresh())
+        proc = await asyncio.create_subprocess_shell(
+            r"pactl subscribe | grep --line-buffered sink",
+            stdout=asyncio.subprocess.PIPE,
+        )
+        await self.refresh()
+        while await proc.stdout.readline():
+            await self.refresh()
 
     async def refresh(self):
-        self["full_text"] = self._fmt.format(await VolumeBlock.get_volume())
+        self["full_text"] = self._fmt.format(
+            self.muted_icon
+            if await VolumeBlock.get_muted() else self.normal_icon,
+            await VolumeBlock.get_volume(),
+        )
 
 
 async def handle_events(blocks):
@@ -144,7 +172,9 @@ async def main():
             separator_block_width=25,
         ),
         VolumeBlock(
-            "墳 {}%",
+            "{} {}%",
+            normal_icon="墳",
+            muted_icon="",
             min_width="墳 100%",
             align="center",
             separator_block_width=25,
