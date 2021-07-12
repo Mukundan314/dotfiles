@@ -30,8 +30,8 @@ set $menu wofi --show drun
 #   output HDMI-A-1 resolution 1920x1080 position 1920,0
 #
 output * bg {{ .colors.color_0 }} solid_color
-output HDMI-A-6 resolution 1920x1080 position 0,0
-output HDMI-A-1 resolution 1920x1080 position 1920,0
+output HDMI-A-1 resolution 1920x1080 position 0,0
+output HDMI-A-4 resolution 1920x1080 position 1920,0
 output HDMI-A-5 resolution 1920x1080 position 3840,0
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
@@ -40,11 +40,11 @@ output HDMI-A-5 resolution 1920x1080 position 3840,0
 #
 # Example configuration:
 #
-exec swayidle -w \
-         timeout 300 'swaylock -F -f -c 000000' \
-         timeout 600 'swaymsg "output * dpms off"' \
-              resume 'swaymsg "output * dpms on"' \
-         before-sleep 'swaylock -F -f -c 000000'
+# exec swayidle -w \
+#          timeout 300 'swaylock -F -f -c 000000' \
+#          timeout 600 'swaymsg "output * dpms off"' \
+#               resume 'swaymsg "output * dpms on"' \
+#          before-sleep 'swaylock -F -f -c 000000'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -249,8 +249,9 @@ bar {
 # Styling:
 #
     default_border pixel 1
+    default_floating_border pixel 1
     gaps inner 10
 
-xwayland disable
+#xwayland disable
 
 include /etc/sway/config.d/*

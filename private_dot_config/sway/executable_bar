@@ -18,6 +18,9 @@ class Block(dict):
     async def handle_event(self, **kwargs):
         pass
 
+    def cleanup(self):
+        pass
+
 
 class CpuBlock(Block):
     def __init__(self, fmt, **kwargs):
@@ -111,6 +114,7 @@ class VolumeBlock(Block):
         self._fmt = fmt
         self.normal_icon = normal_icon
         self.muted_icon = muted_icon
+        self.proc = None
         asyncio.create_task(self.loop())
 
     async def handle_event(self, button, **kwargs):
@@ -122,12 +126,12 @@ class VolumeBlock(Block):
             await VolumeBlock.decrease_volume()
 
     async def loop(self):
-        proc = await asyncio.create_subprocess_shell(
+        self.proc = await asyncio.create_subprocess_shell(
             r"pactl subscribe | grep --line-buffered sink",
             stdout=asyncio.subprocess.PIPE,
         )
         await self.refresh()
-        while await proc.stdout.readline():
+        while await self.proc.stdout.readline():
             await self.refresh()
 
     async def refresh(self):
@@ -137,12 +141,74 @@ class VolumeBlock(Block):
             await VolumeBlock.get_volume(),
         )
 
+    def cleanup(self):
+        if self.proc and self.proc.returncode is None:
+            self.proc.kill()
+
+
+class IdleBlock(Block):
+    @staticmethod
+    async def start_swayidle():
+        return await asyncio.create_subprocess_shell(
+            (
+                r"swayidle -w"
+                r" timeout 300 'swaylock -F -f -c 000000'"
+                r" timeout 600 'swaymsg output \* dpms off'"
+                r"      resume 'swaymsg output \* dpms on'"
+            ),
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+
+    def __init__(self, active_icon, inactive_icon, **kwargs):
+        super().__init__(**kwargs)
+        self["name"] = f"idle"
+        self.active_icon = active_icon
+        self.inactive_icon = inactive_icon
+        self.swayidle = None
+        asyncio.create_task(self.loop())
+
+    async def toggle(self):
+        if self.swayidle is None or self.swayidle.returncode is not None:
+            self.swayidle = await IdleBlock.start_swayidle()
+        else:
+            self.swayidle.kill()
+            await self.swayidle.wait()
+
+        await self.refresh()
+
+    async def handle_event(self, button, **kwargs):
+        if button == 3:
+            await self.toggle()
+
+    async def loop(self):
+        self.swayidle = await IdleBlock.start_swayidle()
+        while True:
+            await asyncio.gather(asyncio.sleep(1), self.refresh())
+
+    async def refresh(self):
+        active = self.swayidle is None or self.swayidle.returncode is None
+        self["full_text"] = self.active_icon if active else self.inactive_icon
+
+    def cleanup(self):
+        if self.swayidle and self.swayidle.returncode is None:
+            self.swayidle.kill()
+
+
+def cleanup(blocks):
+    for block in blocks:
+        block.cleanup()
+    sys.exit(0)
+
 
 async def handle_events(blocks):
     loop = asyncio.get_running_loop()
     await loop.run_in_executor(None, input)
     while True:
-        inp = await loop.run_in_executor(None, input)
+        try:
+            inp = await loop.run_in_executor(None, input)
+        except EOFError:
+            break
         event = json.loads(inp.strip(" ,"))
         for block in blocks:
             if (
@@ -150,6 +216,7 @@ async def handle_events(blocks):
                 and block["instance"] == event["instance"]
             ):
                 asyncio.create_task(block.handle_event(**event))
+    cleanup(blocks)
 
 
 async def main():
@@ -185,6 +252,11 @@ async def main():
         ),
         TimeBlock(
             " %I:%M:%S %p",
+            separator_block_width=25,
+        ),
+        IdleBlock(
+            " ",
+            " ",
             separator_block_width=25,
         ),
     ]
