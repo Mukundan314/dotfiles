@@ -26,7 +26,7 @@ class CpuBlock(Block):
     def __init__(self, fmt, **kwargs):
         super().__init__(**kwargs)
         self["name"] = f"cpu"
-        self._fmt = fmt
+        self.fmt = fmt
         asyncio.create_task(self.loop())
 
     async def loop(self):
@@ -34,14 +34,14 @@ class CpuBlock(Block):
             await asyncio.gather(asyncio.sleep(1), self.refresh())
 
     async def refresh(self):
-        self["full_text"] = self._fmt.format(psutil.cpu_percent())
+        self["full_text"] = self.fmt.format(psutil.cpu_percent())
 
 
 class MemoryBlock(Block):
     def __init__(self, fmt, **kwargs):
         super().__init__(**kwargs)
         self["name"] = f"memory"
-        self._fmt = fmt
+        self.fmt = fmt
         asyncio.create_task(self.loop())
 
     async def loop(self):
@@ -50,14 +50,14 @@ class MemoryBlock(Block):
 
     async def refresh(self):
         memory = psutil.virtual_memory()
-        self["full_text"] = self._fmt.format(memory.used / 1073741824)
+        self["full_text"] = self.fmt.format(memory.used / 1073741824)
 
 
 class TimeBlock(Block):
     def __init__(self, fmt, **kwargs):
         super().__init__(**kwargs)
         self["name"] = f"time"
-        self._fmt = fmt
+        self.fmt = fmt
         asyncio.create_task(self.loop())
 
     async def loop(self):
@@ -65,7 +65,7 @@ class TimeBlock(Block):
             await asyncio.gather(asyncio.sleep(1), self.refresh())
 
     async def refresh(self):
-        self["full_text"] = time.strftime(self._fmt)
+        self["full_text"] = time.strftime(self.fmt)
 
 
 class VolumeBlock(Block):
@@ -111,7 +111,7 @@ class VolumeBlock(Block):
     def __init__(self, fmt, normal_icon, muted_icon, **kwargs):
         super().__init__(**kwargs)
         self["name"] = f"volume"
-        self._fmt = fmt
+        self.fmt = fmt
         self.normal_icon = normal_icon
         self.muted_icon = muted_icon
         self.proc = None
@@ -135,7 +135,7 @@ class VolumeBlock(Block):
             await self.refresh()
 
     async def refresh(self):
-        self["full_text"] = self._fmt.format(
+        self["full_text"] = self.fmt.format(
             self.muted_icon
             if await VolumeBlock.get_muted() else self.normal_icon,
             await VolumeBlock.get_volume(),
