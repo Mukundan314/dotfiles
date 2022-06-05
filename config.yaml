@@ -1,0 +1,22 @@
+config:
+  backup: true
+  create: true
+  dotpath: dotfiles
+  instignore:
+    - '*/.git'
+dotfiles:
+  d_kitty:
+    src: config/kitty
+    dst: ~/.config/kitty
+  f_zshenv:
+    src: zshenv
+    dst: ~/.zshenv
+  d_zsh:
+    src: config/zsh
+    dst: ~/.config/zsh
+profiles:
+  lambda.local:
+    dotfiles:
+    - d_kitty
+    - f_zshenv
+    - d_zsh
