@@ -12,6 +12,9 @@ function dotdrop {
 
 # Load plugins {{{
 source "${ZDOTDIR:-$HOME}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+source "${ZDOTDIR:-$HOME}/plugins/powerlevel10k/powerlevel10k.zsh-theme"
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 # }}}
 
 # Setup aliases {{{
@@ -20,7 +23,6 @@ if [[ "$TERM" == 'xterm-kitty' ]]; then
   alias icat='kitty +kitten icat'
 fi
 
-alias diff='diff --color=auto'
 alias grep='grep --color=auto'
 alias ls='ls --color=auto'
 

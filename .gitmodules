@@ -4,3 +4,6 @@
 [submodule "dotfiles/config/zsh/plugins/zsh-syntax-highlighting"]
 	path = dotfiles/config/zsh/plugins/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "dotfiles/config/zsh/plugins/powerlevel10k"]
+	path = dotfiles/config/zsh/plugins/powerlevel10k
+	url = https://github.com/romkatv/powerlevel10k.git

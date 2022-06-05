@@ -3,7 +3,7 @@ config:
   create: true
   dotpath: dotfiles
   instignore:
-    - '*/.git'
+  - '*/.git'
 dotfiles:
   d_kitty:
     src: config/kitty
