@@ -7,3 +7,6 @@
 [submodule "dotfiles/config/zsh/plugins/powerlevel10k"]
 	path = dotfiles/config/zsh/plugins/powerlevel10k
 	url = https://github.com/romkatv/powerlevel10k.git
+[submodule "dotfiles/config/zsh/plugins/zsh-autosuggestions"]
+	path = dotfiles/config/zsh/plugins/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions

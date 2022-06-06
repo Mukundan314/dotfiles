@@ -2,6 +2,10 @@ config:
   backup: true
   create: true
   dotpath: dotfiles
+  impignore:
+  - '*.zwc'
+  cmpignore:
+  - '*.zwc'
   instignore:
   - '*/.git'
 dotfiles:
