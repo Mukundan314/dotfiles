@@ -1,3 +1,21 @@
+# Set zsh options {{{
+[ ! -d "${XDG_STATE_HOME:-$HOME/.local/state}/zsh" ] && mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/zsh"
+HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/histfile"
+
+KEYTIMEOUT=1
+
+ZLE_PROMPT_INDENT=0
+
+setopt autocd
+setopt beep
+setopt extendedglob
+setopt interactivecomments
+setopt nomatch
+setopt notify
+
+bindkey -v
+# }}}
+
 # dotdrop {{{
 export DOTFILES="$HOME/Documents/git/github.com/mukundan314/dotfiles"
 export DOTDROP_AUTOUPDATE=no
@@ -8,7 +26,6 @@ function dotdrop {
   deactivate
 }
 # }}}
-
 
 # Load plugins {{{
 source "$ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
