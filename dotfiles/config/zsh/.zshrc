@@ -21,7 +21,7 @@ export DOTFILES="$HOME/Documents/git/github.com/mukundan314/dotfiles"
 export DOTDROP_AUTOUPDATE=no
 
 function dotdrop {
-  . $DOTFILES/.venv/bin/activate
+  source "$DOTFILES/.venv/bin/activate"
   $DOTFILES/dotdrop.sh --cfg="$DOTFILES/config.yaml" $@
   deactivate
 }
@@ -36,11 +36,12 @@ source "$ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme"
 source "$ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 source "$ZDOTDIR/plugins/asdf/asdf.sh"
-fpath=(${ASDF_DIR}/completions $fpath)
+fpath=("${ASDF_DIR}/completions" $fpath)
 # }}}
 
 # Setup completions {{{
-autoload -Uz compinit && compinit
+autoload -Uz compinit
+compinit -d "${XDG_CACHE_DIR:-$HOME/.cache}/zcompdump"
 # }}}
 
 # Setup aliases {{{
