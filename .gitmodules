@@ -10,3 +10,6 @@
 [submodule "dotfiles/config/zsh/plugins/zsh-autosuggestions"]
 	path = dotfiles/config/zsh/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "dotfiles/config/zsh/plugins/asdf"]
+	path = dotfiles/config/zsh/plugins/asdf
+	url = https://github.com/asdf-vm/asdf.git

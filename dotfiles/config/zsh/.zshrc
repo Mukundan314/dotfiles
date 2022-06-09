@@ -34,6 +34,13 @@ source "$ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme"
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 
 source "$ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+source "$ZDOTDIR/plugins/asdf/asdf.sh"
+fpath=(${ASDF_DIR}/completions $fpath)
+# }}}
+
+# Setup completions {{{
+autoload -Uz compinit && compinit
 # }}}
 
 # Setup aliases {{{
