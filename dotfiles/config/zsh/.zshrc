@@ -28,6 +28,8 @@ function dotdrop {
 # }}}
 
 # Load plugins {{{
+fpath=("$ZDOTDIR/plugins/zsh-completions/src" $fpath)
+
 source "$ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 source "$ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme"

@@ -13,3 +13,6 @@
 [submodule "dotfiles/config/zsh/plugins/asdf"]
 	path = dotfiles/config/zsh/plugins/asdf
 	url = https://github.com/asdf-vm/asdf.git
+[submodule "dotfiles/config/zsh/plugins/zsh-completions"]
+	path = dotfiles/config/zsh/plugins/zsh-completions
+	url = https://github.com/zsh-users/zsh-completions.git
