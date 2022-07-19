@@ -18,9 +18,13 @@ dotfiles:
   d_zsh:
     src: config/zsh
     dst: ~/.config/zsh
+  d_asdf:
+    src: config/asdf
+    dst: ~/.config/asdf
 profiles:
   lambda.local:
     dotfiles:
     - d_kitty
     - f_zshenv
     - d_zsh
+    - d_asdf
