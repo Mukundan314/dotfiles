@@ -21,6 +21,9 @@ dotfiles:
   d_asdf:
     src: config/asdf
     dst: ~/.config/asdf
+  d_nvim:
+    src: config/nvim
+    dst: ~/.config/nvim
 profiles:
   lambda.local:
     dotfiles:
@@ -28,3 +31,4 @@ profiles:
     - f_zshenv
     - d_zsh
     - d_asdf
+    - d_nvim
