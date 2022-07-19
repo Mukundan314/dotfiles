@@ -46,6 +46,8 @@ fpath=("${ASDF_DIR}/completions" $fpath)
 # Setup completions {{{
 autoload -Uz compinit
 compinit -d "${XDG_CACHE_DIR:-$HOME/.cache}/zcompdump"
+
+source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
 # }}}
 
 # Setup aliases {{{
