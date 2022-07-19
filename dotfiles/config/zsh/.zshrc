@@ -37,6 +37,7 @@ source "$ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme"
 
 source "$ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
+export ASDF_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/asdf"
 source "$ZDOTDIR/plugins/asdf/asdf.sh"
 fpath=("${ASDF_DIR}/completions" $fpath)
 # }}}
