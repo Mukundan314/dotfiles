@@ -10,5 +10,8 @@ export MANPATH="$HOMEBREW_PREFIX/share/man${MANPATH+:$MANPATH}"
 
 export INFOPATH="$HOMEBREW_PREFIX/share/info:${INFOPATH:-}"
 
-export LESSHISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/less//histfile"
+export LESSHISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/less/histfile"
 mkdir -p "$(dirname "$LESSHISTFILE")"
+
+export NODE_REPL_HISTORY="${XDG_STATE_HOME:-$HOME/.local/state}/node/histfile"
+mkdir -p "$(dirname "$NODE_REPL_HISTORY")"
