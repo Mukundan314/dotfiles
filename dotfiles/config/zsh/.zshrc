@@ -17,13 +17,17 @@ bindkey -v
 # }}}
 
 # dotdrop {{{
-export DOTFILES="$HOME/Documents/git/github.com/mukundan314/dotfiles"
+DOTFILES="$HOME/Documents/git/github.com/mukundan314/dotfiles"
 export DOTDROP_AUTOUPDATE=no
 
 function dotdrop {
-  source "$DOTFILES/.venv/bin/activate"
-  $DOTFILES/dotdrop.sh --cfg="$DOTFILES/config.yaml" $@
-  deactivate
+  if [[ "$1" == "cd" ]]; then
+    cd $DOTFILES
+  else
+    source "$DOTFILES/.venv/bin/activate"
+    $DOTFILES/dotdrop.sh --cfg="$DOTFILES/config.yaml" $@
+    deactivate
+  fi
 }
 # }}}
 
