@@ -19,3 +19,6 @@
 [submodule "dotfiles/config/nvim/pack/plugins/opt/catppuccin"]
 	path = dotfiles/config/nvim/pack/plugins/opt/catppuccin
 	url = https://github.com/catppuccin/nvim.git
+[submodule "dotfiles/config/nvim/pack/plugins/opt/lualine"]
+	path = dotfiles/config/nvim/pack/plugins/opt/lualine
+	url = https://github.com/nvim-lualine/lualine.nvim.git
