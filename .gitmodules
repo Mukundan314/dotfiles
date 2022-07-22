@@ -16,3 +16,6 @@
 [submodule "dotfiles/config/zsh/plugins/zsh-completions"]
 	path = dotfiles/config/zsh/plugins/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
+[submodule "dotfiles/config/nvim/pack/plugins/opt/catppuccin"]
+	path = dotfiles/config/nvim/pack/plugins/opt/catppuccin
+	url = https://github.com/catppuccin/nvim.git
