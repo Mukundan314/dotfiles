@@ -1,1 +1,5 @@
+# python virtual environment
 .venv
+
+# backup files created on dotdrop update
+*.bak
