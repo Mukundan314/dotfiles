@@ -29,6 +29,8 @@ function dotdrop {
     deactivate
   fi
 }
+
+fpath+=$DOTFILES/dotdrop/completion
 # }}}
 
 # Load plugins {{{
@@ -37,7 +39,7 @@ fpath=("$ZDOTDIR/plugins/zsh-completions/src" $fpath)
 source "$ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 source "$ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme"
-[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+[[ -f ~/.config/zsh/.p10k.zsh ]] && source ~/.config/zsh/.p10k.zsh
 
 source "$ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
@@ -51,7 +53,8 @@ fpath=("${ASDF_DIR}/completions" $fpath)
 autoload -Uz compinit
 compinit -d "${XDG_CACHE_DIR:-$HOME/.cache}/zcompdump"
 
-source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+[[ -f "$HOMEBREW_PREFIX/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc" ]] && \
+  source "$HOMEBREW_PREFIX/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
 # }}}
 
 # Setup aliases {{{
