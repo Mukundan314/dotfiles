@@ -10,9 +10,6 @@ vim.api.nvim_set_keymap("n", "<Leader><Space>", ":nohlsearch<CR>", { noremap = t
 
 vim.api.nvim_create_autocmd("TextYankPost", { callback = function() vim.highlight.on_yank() end })
 
-vim.cmd [[packadd! catppuccin]]
-vim.cmd [[packadd! lualine]]
-
-vim.cmd [[colorscheme catppuccin]]
-
-require("lualine").setup()
+local configure = require('configure')
+configure.catppuccin()
+configure.lualine()
