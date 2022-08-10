@@ -11,5 +11,7 @@ vim.api.nvim_set_keymap("n", "<Leader><Space>", ":nohlsearch<CR>", { noremap = t
 vim.api.nvim_create_autocmd("TextYankPost", { callback = function() vim.highlight.on_yank() end })
 
 local configure = require('configure')
+
 configure.catppuccin()
 configure.lualine()
+configure.nvim_lspconfig()

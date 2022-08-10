@@ -22,3 +22,6 @@
 [submodule "dotfiles/config/nvim/pack/plugins/opt/lualine"]
 	path = dotfiles/config/nvim/pack/plugins/opt/lualine
 	url = https://github.com/nvim-lualine/lualine.nvim.git
+[submodule "dotfiles/config/nvim/pack/plugins/opt/nvim-lspconfig"]
+	path = dotfiles/config/nvim/pack/plugins/opt/nvim-lspconfig
+	url = https://github.com/neovim/nvim-lspconfig
