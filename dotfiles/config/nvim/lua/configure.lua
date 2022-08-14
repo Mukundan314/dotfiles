@@ -17,19 +17,8 @@ function configure.nvim_lspconfig()
   function on_attach(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
-    vim.keymap.set(
-      "n",
-      "K",
-      vim.lsp.buf.hover,
-      { noremap = true, silent = true, buffer = bufnr }
-    )
-
-    vim.keymap.set(
-      "n",
-      "<leader>f",
-      vim.lsp.buf.formatting,
-      { noremap = true, silent = true, buffer = bufnr }
-    )
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, buffer = bufnr })
+    vim.keymap.set("n", "<leader>f", vim.lsp.buf.formatting, { noremap = true, silent = true, buffer = bufnr })
   end
 
   local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -38,6 +27,7 @@ function configure.nvim_lspconfig()
   capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
   lspconfig.pylsp.setup({ on_attach = on_attach, capabilities = capabilities })
+  lspconfig.tsserver.setup({ on_attach = on_attach, capabilities = capabilities })
 end
 
 function configure.nvim_cmp()
