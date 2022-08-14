@@ -3,6 +3,8 @@ vim.o.colorcolumn = "80,120"
 vim.o.cursorline = true
 vim.o.number = true
 vim.o.relativenumber = true
+vim.o.signcolumn = "yes"
+vim.o.pumheight = 10
 
 vim.g.mapleader = " "
 
@@ -10,8 +12,18 @@ vim.api.nvim_set_keymap("n", "<Leader><Space>", ":nohlsearch<CR>", { noremap = t
 
 vim.api.nvim_create_autocmd("TextYankPost", { callback = function() vim.highlight.on_yank() end })
 
-local configure = require('configure')
+vim.diagnostic.config({ virtual_text = false, update_in_insert = true })
+vim.keymap.set(
+  "n",
+  "<leader>e",
+  function() vim.diagnostic.open_float({ scope = "cursor" }) end,
+  { noremap = true, silent = true, buffer = bufnr }
+)
+
+
+local configure = require("configure")
 
 configure.catppuccin()
 configure.lualine()
 configure.nvim_lspconfig()
+configure.nvim_cmp()

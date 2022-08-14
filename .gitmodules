@@ -25,3 +25,9 @@
 [submodule "dotfiles/config/nvim/pack/plugins/opt/nvim-lspconfig"]
 	path = dotfiles/config/nvim/pack/plugins/opt/nvim-lspconfig
 	url = https://github.com/neovim/nvim-lspconfig
+[submodule "dotfiles/config/nvim/pack/plugins/opt/nvim-cmp"]
+	path = dotfiles/config/nvim/pack/plugins/opt/nvim-cmp
+	url = https://github.com/hrsh7th/nvim-cmp
+[submodule "dotfiles/config/nvim/pack/plugins/opt/cmp-nvim-lsp"]
+	path = dotfiles/config/nvim/pack/plugins/opt/cmp-nvim-lsp
+	url = https://github.com/hrsh7th/cmp-nvim-lsp
