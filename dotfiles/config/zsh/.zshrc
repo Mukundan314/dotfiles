@@ -24,9 +24,7 @@ function dotdrop {
   if [[ "$1" == "cd" ]]; then
     cd $DOTFILES
   else
-    source "$DOTFILES/.venv/bin/activate"
     $DOTFILES/dotdrop.sh --cfg="$DOTFILES/config.yaml" $@
-    deactivate
   fi
 }
 
