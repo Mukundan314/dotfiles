@@ -1,6 +1,6 @@
 # Set zsh options {{{
-[ ! -d "${XDG_STATE_HOME:-$HOME/.local/state}/zsh" ] && mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/zsh"
 HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/histfile"
+mkdir -p "$(dirname "$HISTFILE")"
 
 KEYTIMEOUT=1
 
