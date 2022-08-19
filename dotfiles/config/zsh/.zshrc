@@ -1,4 +1,6 @@
 # Set zsh options {{{
+SAVEHIST=50000
+HISTSIZE=50000
 HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/histfile"
 mkdir -p "$(dirname "$HISTFILE")"
 
@@ -12,6 +14,7 @@ setopt extendedglob
 setopt interactivecomments
 setopt nomatch
 setopt notify
+setopt appendhistory
 
 bindkey -v
 # }}}
