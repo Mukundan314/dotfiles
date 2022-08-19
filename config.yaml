@@ -27,6 +27,12 @@ dotfiles:
   d_sway:
     src: config/sway
     dst: ~/.config/sway
+  d_swaylock:
+    src: config/swaylock
+    dst: ~/.config/swaylock
+  d_swayidle:
+    src: config/swayidle
+    dst: ~/.config/swayidle
 profiles:
   lambda.local:
     dotfiles:
@@ -43,3 +49,5 @@ profiles:
     - d_asdf
     - d_nvim
     - d_sway
+    - d_swaylock
+    - d_swayidle

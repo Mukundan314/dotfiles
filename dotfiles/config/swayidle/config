@@ -1,0 +1,6 @@
+timeout 300 'loginctl lock-session'
+timeout 600 'swaymsg output \* dpms off' resume 'swaymsg output \* dpms on'
+# timeout 900 'systemctl suspend'
+before-sleep 'loginctl lock-session'
+lock '! pgrep -x swaylock > /dev/null && swaylock'
+unlock 'killall -q swaylock'

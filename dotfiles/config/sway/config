@@ -48,6 +48,7 @@ output "BenQ Corporation BenQ GW2470 BBJ00948019"    resolution 1920x1080 scale 
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
 # resumed. It will also lock your screen before your computer goes to sleep.
+exec swayidle -w
 
 ### Input configuration
 #
@@ -77,7 +78,7 @@ output "BenQ Corporation BenQ GW2470 BBJ00948019"    resolution 1920x1080 scale 
     bindsym $mod+d exec $menu
 
     # Lock screen
-    bindsym $mod+g exec swaylock -f -c 000000
+    bindsym $mod+g exec loginctl lock-session
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
