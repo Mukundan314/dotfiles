@@ -223,6 +223,14 @@ bar {
     }
 }
 
+#
+# Styling:
+#
+    default_border pixel 1
+    default_floating_border pixel 1
+
+    gaps inner 10
+
 xwayland disable
 
 include /etc/sway/config.d/*
