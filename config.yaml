@@ -24,6 +24,9 @@ dotfiles:
   d_nvim:
     src: config/nvim
     dst: ~/.config/nvim
+  d_sway:
+    src: config/sway
+    dst: ~/.config/sway
 profiles:
   lambda.local:
     dotfiles:
@@ -32,3 +35,11 @@ profiles:
     - d_zsh
     - d_asdf
     - d_nvim
+  sigma:
+    dotfiles:
+    - d_kitty
+    - f_zshenv
+    - d_zsh
+    - d_asdf
+    - d_nvim
+    - d_sway
