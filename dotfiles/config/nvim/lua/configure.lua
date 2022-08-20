@@ -2,6 +2,20 @@ local configure = {}
 
 function configure.catppuccin()
   vim.cmd("packadd! catppuccin")
+
+  require("catppuccin").setup({
+    integrations = {
+      native_lsp = {
+        underlines = {
+          errors = { "undercurl" },
+          hints = { "undercurl" },
+          warnings = { "undercurl" },
+          information = { "undercurl" },
+        },
+      },
+    },
+  })
+
   vim.cmd("colorscheme catppuccin")
 end
 
