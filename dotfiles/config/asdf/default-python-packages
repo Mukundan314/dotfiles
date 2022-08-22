@@ -1,1 +1,3 @@
 python-lsp-server[all]
+python-lsp-black
+pylsp-mypy

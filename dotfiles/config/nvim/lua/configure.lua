@@ -3,6 +3,7 @@ local configure = {}
 function configure.catppuccin()
   vim.cmd("packadd! catppuccin")
 
+  vim.g.catppuccin_flavour = "mocha"
   require("catppuccin").setup({
     integrations = {
       native_lsp = {
@@ -16,7 +17,6 @@ function configure.catppuccin()
     },
   })
 
-  vim.g.catppuccin_flavour = "mocha"
   vim.cmd("colorscheme catppuccin")
 end
 
@@ -41,7 +41,12 @@ function configure.nvim_lspconfig()
   vim.cmd("packadd! cmp-nvim-lsp")
   capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
-  lspconfig.pylsp.setup({ on_attach = on_attach, capabilities = capabilities })
+  lspconfig.pylsp.setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+    settings = { pylsp = { plugins = { black = { enabled = true } } } },
+  })
+
   lspconfig.tsserver.setup({ on_attach = on_attach, capabilities = capabilities })
 end
 
@@ -51,8 +56,8 @@ function configure.nvim_cmp()
 
   cmp.setup({
     mapping = cmp.mapping.preset.insert({
-      ['<C-p>'] = cmp.mapping.select_prev_item(),
-      ['<C-n>'] = cmp.mapping.select_next_item(),
+      ["<C-p>"] = cmp.mapping.select_prev_item(),
+      ["<C-n>"] = cmp.mapping.select_next_item(),
     }),
     sources = cmp.config.sources({
       { name = "nvim_lsp" },
