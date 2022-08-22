@@ -1,0 +1,141 @@
+#!/usr/bin/env python
+import asyncio
+import json
+import signal
+import sys
+import time
+from typing import Any, Callable, NamedTuple, Optional
+
+
+class Event(NamedTuple):
+    # both
+    name: str
+    instance: str
+    x: int
+    y: int
+    button: int
+    relative_x: int
+    relative_y: int
+    width: int
+    height: int
+
+    # sway only
+    event: Optional[int] = None
+    scale: Optional[int] = None  # Not documented in swaybar-protocol(7)
+
+    # i3 only
+    output_x: Optional[int] = None
+    output_y: Optional[int] = None
+    modifiers: Optional[list[str]] = None
+
+
+class Block(dict[str, Any]):
+    instances = 0
+    name = "static"
+
+    def __init__(self, on_change: Optional[Callable[[], Any]] = None, **kwargs: Any):
+        super().__init__(kwargs)
+        self.on_change = on_change
+        self["name"] = type(self).name
+        self["instance"] = str(type(self).instances)
+        type(self).instances += 1
+
+    def __init_subclass__(cls, /, name: str) -> None:
+        super().__init_subclass__()
+        cls.instances = 0
+        cls.name = name
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        dict.__setitem__(self, key, value)
+        if self.on_change:
+            self.on_change()
+
+    async def handle_event(self, event: Event) -> None:
+        pass
+
+    async def destroy(self) -> None:
+        pass
+
+
+class TimeBlock(Block, name="time"):
+    def __init__(self, fmt: str, interval: int = 1, **kwargs: Any):
+        super().__init__(**kwargs)
+        self.fmt = fmt
+        self.interval = interval
+        self.task = asyncio.create_task(self.loop())
+
+    async def loop(self) -> None:
+        while True:
+            await asyncio.gather(asyncio.sleep(self.interval), self.refresh())
+
+    async def refresh(self) -> None:
+        self["full_text"] = time.strftime(self.fmt)
+
+    async def destroy(self) -> None:
+        self.task.cancel()
+        await self.task
+
+
+async def handle_events(reader: asyncio.StreamReader, blocks: list[Block]) -> None:
+    try:
+        await reader.readuntil(b"[")
+        while not reader.at_eof():
+            data = await reader.readuntil(b"}")
+            event = Event(**json.loads(data.decode().strip(" ,\n")))
+            for block in blocks:
+                if block["name"] == event.name and block["instance"] == event.instance:
+                    asyncio.create_task(block.handle_event(event))
+    except (asyncio.IncompleteReadError, asyncio.CancelledError):
+        pass
+
+
+async def main() -> None:
+    loop = asyncio.get_running_loop()
+
+    shutdown_event = asyncio.Event()
+    loop.add_signal_handler(signal.SIGTERM, shutdown_event.set)
+    loop.add_signal_handler(signal.SIGINT, shutdown_event.set)
+
+    change_event = asyncio.Event()
+    blocks: list[Block] = [
+        TimeBlock(
+            " %a %b %d %Y",
+            on_change=change_event.set,
+        ),
+        TimeBlock(
+            " %I:%M:%S %p",
+            on_change=change_event.set,
+        ),
+    ]
+
+    reader = asyncio.StreamReader()
+    protocol = asyncio.StreamReaderProtocol(reader)
+    await loop.connect_read_pipe(lambda: protocol, sys.stdin)
+    event_handler = asyncio.create_task(handle_events(reader, blocks))
+
+    print('{"version": 1, "click_events": true}', flush=True)
+    print("[", flush=True)
+
+    pending: set[asyncio.Task] = {
+        event_handler,
+        asyncio.create_task(shutdown_event.wait()),
+    }
+
+    while not (event_handler.done() or shutdown_event.is_set()):
+        change_event.clear()
+        print(json.dumps(blocks), ",", flush=True)
+        _, pending = await asyncio.wait(
+            {*pending, asyncio.create_task(change_event.wait())},
+            return_when=asyncio.FIRST_COMPLETED,
+        )
+
+    for task in pending:
+        task.cancel()
+
+    await asyncio.wait(
+        pending | {asyncio.create_task(block.destroy()) for block in blocks}
+    )
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
