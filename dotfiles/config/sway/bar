@@ -57,6 +57,69 @@ class Block(dict[str, Any]):
         pass
 
 
+class VolumeBlock(Block, name="volume"):
+    @staticmethod
+    async def launch_pulsemixer() -> None:
+        await asyncio.create_subprocess_exec(
+            "kitty", "pulsemixer", start_new_session=True
+        )
+
+    @staticmethod
+    async def toggle_mute() -> None:
+        proc = await asyncio.create_subprocess_shell(
+            "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        )
+        await proc.wait()
+
+    @staticmethod
+    async def increase_volume(amount: int) -> None:
+        proc = await asyncio.create_subprocess_shell(
+            f"wpctl set-volume @DEFAULT_AUDIO_SINK@ {amount}%+"
+        )
+        await proc.wait()
+
+    @staticmethod
+    async def decrease_volume(amount: int) -> None:
+        proc = await asyncio.create_subprocess_shell(
+            f"wpctl set-volume @DEFAULT_AUDIO_SINK@ {amount}%-"
+        )
+        await proc.wait()
+
+    def __init__(self, fmt: str, mute_fmt: str, **kwargs: Any):
+        super().__init__(**kwargs)
+        self.fmt = fmt
+        self.mute_fmt = mute_fmt
+        self.task = asyncio.create_task(self.loop())
+
+    async def loop(self) -> None:
+        self.subscription = await asyncio.create_subprocess_shell(
+            "~/.config/sway/wp-volume-subscribe",
+            stdout=asyncio.subprocess.PIPE,
+        )
+
+        assert self.subscription.stdout is not None
+
+        while not self.subscription.stdout.at_eof():
+            data = json.loads((await self.subscription.stdout.readline()).decode())
+            if data["mute"]:
+                self["full_text"] = self.mute_fmt.format(round(data["volume"] * 100))
+            else:
+                self["full_text"] = self.fmt.format(round(data["volume"] * 100))
+
+    async def handle_event(self, event: Event) -> None:
+        if event.button == 1:
+            await VolumeBlock.launch_pulsemixer()
+        elif event.button == 3:
+            await VolumeBlock.toggle_mute()
+        elif event.button == 4:
+            await VolumeBlock.increase_volume(5)
+        elif event.button == 5:
+            await VolumeBlock.decrease_volume(5)
+
+    async def destroy(self) -> None:
+        self.task.cancel()
+
+
 class TimeBlock(Block, name="time"):
     def __init__(self, fmt: str, interval: int = 1, **kwargs: Any):
         super().__init__(**kwargs)
@@ -98,6 +161,11 @@ async def main() -> None:
 
     change_event = asyncio.Event()
     blocks: list[Block] = [
+        VolumeBlock(
+            "墳 {}%",
+            " {}%",
+            on_change=change_event.set,
+        ),
         TimeBlock(
             " %a %b %d %Y",
             on_change=change_event.set,
