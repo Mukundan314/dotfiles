@@ -93,18 +93,30 @@ class VolumeBlock(Block, name="volume"):
 
     async def loop(self) -> None:
         self.subscription = await asyncio.create_subprocess_shell(
-            "~/.config/sway/wp-volume-subscribe",
+            "pw-dump -m | jq -c '.[] | select(.type != \"PipeWire:Interface:Client\" and .info != null)'",
+            limit=1024 * 1024,
             stdout=asyncio.subprocess.PIPE,
         )
 
         assert self.subscription.stdout is not None
 
         while not self.subscription.stdout.at_eof():
-            data = json.loads((await self.subscription.stdout.readline()).decode())
-            if data["mute"]:
-                self["full_text"] = self.mute_fmt.format(round(data["volume"] * 100))
-            else:
-                self["full_text"] = self.fmt.format(round(data["volume"] * 100))
+            await self.subscription.stdout.readline()
+            await self.refresh()
+
+    async def refresh(self) -> None:
+        proc = await asyncio.create_subprocess_shell(
+            "wpctl get-volume @DEFAULT_AUDIO_SINK@",
+            stdout=asyncio.subprocess.PIPE,
+        )
+
+        stdout, _ = await proc.communicate()
+        _, volume, *muted = stdout.decode().split(" ")
+
+        if muted:
+            self["full_text"] = self.mute_fmt.format(round(float(volume) * 100))
+        else:
+            self["full_text"] = self.fmt.format(round(float(volume) * 100))
 
     async def handle_event(self, event: Event) -> None:
         if event.button == 1:
