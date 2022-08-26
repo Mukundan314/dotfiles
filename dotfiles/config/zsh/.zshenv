@@ -20,3 +20,9 @@ mkdir -p "$(dirname "$NODE_REPL_HISTORY")"
 export MYPY_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/mypy"
 
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/npm/config"
+
+export BROWSER=chromium
+export DIFFPROG="nvim -d"
+export EDITOR="nvim -e"
+export PAGER=less
+export VISUAL=nvim
