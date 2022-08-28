@@ -36,6 +36,9 @@ dotfiles:
   d_npm:
     src: config/npm
     dst: ~/.config/npm
+  d_ranger:
+    src: config/ranger
+    dst: ~/.config/ranger
 profiles:
   lambda.local:
     dotfiles:
@@ -56,3 +59,4 @@ profiles:
     - d_swaylock
     - d_swayidle
     - d_npm
+    - d_ranger
