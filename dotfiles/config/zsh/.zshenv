@@ -26,3 +26,7 @@ export DIFFPROG="nvim -d"
 export EDITOR="nvim -e"
 export PAGER=less
 export VISUAL=nvim
+
+typeset -U PATH path
+path=("$HOME/.local/bin" "$path[@]")
+export PATH
