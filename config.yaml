@@ -33,9 +33,6 @@ dotfiles:
   d_swayidle:
     src: config/swayidle
     dst: ~/.config/swayidle
-  d_npm:
-    src: config/npm
-    dst: ~/.config/npm
   d_ranger:
     src: config/ranger
     dst: ~/.config/ranger
@@ -47,7 +44,6 @@ profiles:
     - d_zsh
     - d_asdf
     - d_nvim
-    - d_npm
   sigma:
     dotfiles:
     - d_kitty
@@ -58,5 +54,4 @@ profiles:
     - d_sway
     - d_swaylock
     - d_swayidle
-    - d_npm
     - d_ranger
