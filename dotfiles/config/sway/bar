@@ -93,16 +93,15 @@ class VolumeBlock(Block, name="volume"):
 
     async def loop(self) -> None:
         self.subscription = await asyncio.create_subprocess_shell(
-            "pw-dump -m | jq -c '.[] | select(.type != \"PipeWire:Interface:Client\" and .info != null)'",
-            limit=1024 * 1024,
+            "pw-dump -m | jq --unbuffered '.[] | select(.type == \"PipeWire:Interface:Node\") | true'",
             stdout=asyncio.subprocess.PIPE,
         )
 
         assert self.subscription.stdout is not None
 
         while not self.subscription.stdout.at_eof():
-            await self.subscription.stdout.readline()
             await self.refresh()
+            await self.subscription.stdout.readline()
 
     async def refresh(self) -> None:
         proc = await asyncio.create_subprocess_shell(
