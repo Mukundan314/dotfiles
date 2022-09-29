@@ -28,5 +28,5 @@ export PAGER=less
 export VISUAL=nvim
 
 typeset -U PATH path
-path=("$HOME/.local/bin" "$path[@]")
+path=("$HOME/bin" "$HOME/.local/bin" "$path[@]")
 export PATH
