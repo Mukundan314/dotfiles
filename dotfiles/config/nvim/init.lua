@@ -6,6 +6,10 @@ vim.o.relativenumber = true
 vim.o.signcolumn = "yes"
 vim.o.pumheight = 10
 
+if os.getenv("ASDF_DATA_DIR") then
+  vim.g.python3_host_prog = os.getenv("ASDF_DATA_DIR") .. "/shims/python"
+end
+
 vim.g.mapleader = " "
 
 vim.api.nvim_set_keymap("n", "<Leader><Space>", ":nohlsearch<CR>", { noremap = true, silent = true })
@@ -25,5 +29,6 @@ local configure = require("configure")
 
 configure.catppuccin()
 configure.lualine()
-configure.nvim_lspconfig()
 configure.nvim_cmp()
+configure.nvim_lspconfig()
+configure.nvim_treesitter()
