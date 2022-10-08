@@ -1,6 +1,7 @@
 config:
   backup: true
   create: true
+  clear_workdir: true
   dotpath: dotfiles
   impignore:
   - '*.zwc'

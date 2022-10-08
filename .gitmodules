@@ -34,3 +34,6 @@
 [submodule "dotfiles/config/nvim/pack/plugins/opt/nvim-treesitter"]
 	path = dotfiles/config/nvim/pack/plugins/opt/nvim-treesitter
 	url = https://github.com/nvim-treesitter/nvim-treesitter.git
+[submodule "dotfiles/config/nvim/pack/plugins/opt/vim-sleuth"]
+	path = dotfiles/config/nvim/pack/plugins/opt/vim-sleuth
+	url = https://github.com/tpope/vim-sleuth.git

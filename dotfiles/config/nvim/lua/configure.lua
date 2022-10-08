@@ -72,4 +72,8 @@ function configure.nvim_cmp()
   })
 end
 
+function configure.vim_sleuth()
+  vim.cmd("packadd! vim-sleuth")
+end
+
 return configure
