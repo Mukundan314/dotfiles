@@ -33,7 +33,7 @@ function configure.nvim_lspconfig()
     vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
     vim.keymap.set("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, buffer = bufnr })
-    vim.keymap.set("n", "<leader>f", vim.lsp.buf.formatting, { noremap = true, silent = true, buffer = bufnr })
+    vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { noremap = true, silent = true, buffer = bufnr })
   end
 
   local capabilities = vim.lsp.protocol.make_client_capabilities()
