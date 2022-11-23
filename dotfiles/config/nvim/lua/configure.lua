@@ -36,10 +36,10 @@ function configure.nvim_lspconfig()
     vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { noremap = true, silent = true, buffer = bufnr })
   end
 
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
 
   vim.cmd("packadd! cmp-nvim-lsp")
-  capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+
+  local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
   lspconfig.pylsp.setup({
     on_attach = on_attach,
