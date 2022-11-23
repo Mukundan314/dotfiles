@@ -85,6 +85,14 @@ exec swayidle -w
     bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
     bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
 
+    # Screenshot
+    bindsym Print exec grimshot copy screen
+    bindsym Ctrl+Print exec grimshot copy area
+    bindsym Mod4+Print exec grimshot copy window
+    bindsym Shift+Print exec grimshot save screen
+    bindsym Ctrl+Shift+Print exec grimshot save area
+    bindsym Mod4+Shift+Print exec grimshot save window
+
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
     # Despite the name, also works for non-floating windows.
