@@ -76,4 +76,12 @@ function configure.vim_sleuth()
   vim.cmd("packadd! vim-sleuth")
 end
 
+function configure.gitsigns()
+  vim.cmd("packadd! gitsigns.nvim")
+
+  require("gitsigns").setup({
+    current_line_blame = true,
+  })
+end
+
 return configure

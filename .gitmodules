@@ -37,3 +37,6 @@
 [submodule "dotfiles/config/nvim/pack/plugins/opt/vim-sleuth"]
 	path = dotfiles/config/nvim/pack/plugins/opt/vim-sleuth
 	url = https://github.com/tpope/vim-sleuth.git
+[submodule "dotfiles/config/nvim/pack/plugins/opt/gitsigns.nvim"]
+	path = dotfiles/config/nvim/pack/plugins/opt/gitsigns.nvim
+	url = https://github.com/lewis6991/gitsigns.nvim.git
