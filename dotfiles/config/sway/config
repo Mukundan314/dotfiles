@@ -25,10 +25,10 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec --
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
-#output "Goldstar Company Ltd LG Ultra HD 0x00001733" resolution 3840x2160 scale 2 position -1920,0 adaptive_sync on 
-output "Goldstar Company Ltd LG Ultra HD 0x00001733" resolution 1920x1080 scale 1 position -1920,0 adaptive_sync on 
-output "BenQ Corporation BenQ GC2870 F7G00945019"    resolution 1920x1080 scale 1 position 0,0
-output "BenQ Corporation BenQ GW2470 BBJ00948019"    resolution 1920x1080 scale 1 position 1920,-355 transform 90
+#output "LG Electronics LG Ultra HD 0x00001733" resolution 3840x2160 scale 2 position -1920,0 adaptive_sync on
+output "LG Electronics LG Ultra HD 0x00001733" resolution 1920x1080 scale 1 position -1920,0 adaptive_sync on
+output "BNQ BenQ GC2870 F7G00945019"    resolution 1920x1080 scale 1 position 0,0
+output "BNQ BenQ GW2470 BBJ00948019"    resolution 1920x1080 scale 1 position 1920,-355 transform 90
 #
 # Example configuration:
 #
