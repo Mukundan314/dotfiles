@@ -48,12 +48,17 @@ function configure.nvim_lspconfig()
   })
 
   lspconfig.tsserver.setup({ on_attach = on_attach, capabilities = capabilities })
+
+  lspconfig.clangd.setup({ on_attach = on_attach, capabilities = capabilities })
 end
 
 function configure.nvim_treesitter()
   vim.cmd("packadd! nvim-treesitter")
   require("nvim-treesitter.configs").setup({
-    highlight = { enable = true },
+     highlight = {
+       enable = true,
+       additional_vim_regex_highlighting = true,
+     },
   })
 end
 
