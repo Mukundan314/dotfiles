@@ -4,8 +4,12 @@ config:
   dotpath: dotfiles
   impignore:
   - '*.zwc'
+  - '*.so'
+  - '*.revision'
   cmpignore:
   - '*.zwc'
+  - '*.so'
+  - '*.revision'
   instignore:
   - '*/.git'
 dotfiles:
