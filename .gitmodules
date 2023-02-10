@@ -43,3 +43,6 @@
 [submodule "dotfiles/config/nvim/pack/plugins/opt/vim-vsnip"]
 	path = dotfiles/config/nvim/pack/plugins/opt/vim-vsnip
 	url = https://github.com/hrsh7th/vim-vsnip.git
+[submodule "dotfiles/config/nvim/pack/plugins/opt/which-key.nvim"]
+	path = dotfiles/config/nvim/pack/plugins/opt/which-key.nvim
+	url = https://github.com/folke/which-key.nvim.git

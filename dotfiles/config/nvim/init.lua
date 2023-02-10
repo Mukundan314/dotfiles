@@ -5,6 +5,8 @@ vim.o.number = true
 vim.o.relativenumber = true
 vim.o.signcolumn = "yes"
 vim.o.pumheight = 10
+vim.o.timeout = true
+vim.o.timeoutlen = 300
 
 if os.getenv("ASDF_DATA_DIR") then
   vim.g.python3_host_prog = os.getenv("ASDF_DATA_DIR") .. "/shims/python"
@@ -21,7 +23,7 @@ vim.keymap.set(
   "n",
   "<leader>e",
   function() vim.diagnostic.open_float({ scope = "cursor" }) end,
-  { noremap = true, silent = true, buffer = bufnr }
+  { noremap = true, silent = true, buffer = bufnr, desc = "View diagnostic" }
 )
 
 
@@ -34,3 +36,4 @@ configure.nvim_lspconfig()
 configure.nvim_treesitter()
 configure.vim_sleuth()
 configure.gitsigns()
+configure.which_key()
