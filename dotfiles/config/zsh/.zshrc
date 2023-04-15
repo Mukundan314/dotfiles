@@ -62,10 +62,15 @@ compinit -d "${XDG_CACHE_DIR:-$HOME/.cache}/zcompdump"
 # }}}
 
 # Setup aliases {{{
-if [[ "$TERM" == 'xterm-kitty' ]]; then
-  alias ssh='kitty +kitten ssh'
-  alias icat='kitty +kitten icat'
-fi
+case "$TERM" in
+  "xterm-kitty")
+    alias ssh='kitty +kitten ssh'
+    alias icat='kitty +kitten icat'
+    ;;
+  "wezterm")
+    alias icat='wezterm imgcat'
+    ;;
+esac
 
 alias grep='grep --color=auto'
 alias ls='ls --color=auto'
