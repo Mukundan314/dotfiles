@@ -49,6 +49,8 @@ function configure.nvim_lspconfig()
 
   lspconfig.tsserver.setup({ on_attach = on_attach, capabilities = capabilities })
 
+  lspconfig.gopls.setup({ on_attach = on_attach, capabilities = capabilities })
+
   lspconfig.clangd.setup({ on_attach = on_attach, capabilities = capabilities })
 end
 
