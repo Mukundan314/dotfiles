@@ -42,6 +42,11 @@ function configure.lualine()
   require("lualine").setup()
 end
 
+function configure.nvim_web_devicons()
+  vim.cmd("packadd! nvim-web-devicons")
+  require('nvim-web-devicons').setup()
+end
+
 function configure.nvim_lspconfig()
   vim.cmd("packadd! nvim-lspconfig")
   local lspconfig = require("lspconfig")

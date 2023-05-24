@@ -49,3 +49,6 @@
 [submodule "dotfiles/config/nvim/pack/plugins/opt/bufferline.nvim"]
 	path = dotfiles/config/nvim/pack/plugins/opt/bufferline.nvim
 	url = https://github.com/akinsho/bufferline.nvim.git
+[submodule "dotfiles/config/nvim/pack/plugins/opt/nvim-web-devicons"]
+	path = dotfiles/config/nvim/pack/plugins/opt/nvim-web-devicons
+	url = https://github.com/nvim-tree/nvim-web-devicons.git
