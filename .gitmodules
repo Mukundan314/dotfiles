@@ -46,3 +46,6 @@
 [submodule "dotfiles/config/nvim/pack/plugins/opt/which-key.nvim"]
 	path = dotfiles/config/nvim/pack/plugins/opt/which-key.nvim
 	url = https://github.com/folke/which-key.nvim.git
+[submodule "dotfiles/config/nvim/pack/plugins/opt/bufferline.nvim"]
+	path = dotfiles/config/nvim/pack/plugins/opt/bufferline.nvim
+	url = https://github.com/akinsho/bufferline.nvim.git

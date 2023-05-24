@@ -2,9 +2,9 @@ vim.o.clipboard = "unnamedplus"
 vim.o.colorcolumn = "80,120"
 vim.o.cursorline = true
 vim.o.number = true
+vim.o.pumheight = 10
 vim.o.relativenumber = true
 vim.o.signcolumn = "yes"
-vim.o.pumheight = 10
 vim.o.timeout = true
 vim.o.timeoutlen = 300
 
@@ -30,6 +30,7 @@ vim.keymap.set(
 local configure = require("configure")
 
 configure.catppuccin()
+configure.bufferline()
 configure.lualine()
 configure.nvim_cmp()
 configure.nvim_lspconfig()

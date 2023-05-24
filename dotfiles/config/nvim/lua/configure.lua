@@ -20,6 +20,23 @@ function configure.catppuccin()
   vim.cmd("colorscheme catppuccin")
 end
 
+function configure.bufferline()
+  vim.cmd("packadd! bufferline.nvim")
+  require("bufferline").setup({
+    options = {
+      diagnostics = "nvim_lsp",
+      show_buffer_close_icons = false,
+      separator_style = "slope",
+      always_show_bufferline = false,
+      hover = {
+        enabled = true,
+        delay = 10,
+        reveal = { "close" },
+      },
+    },
+  })
+end
+
 function configure.lualine()
   vim.cmd("packadd! lualine")
   require("lualine").setup()
