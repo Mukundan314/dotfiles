@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 import asyncio
 import json
+import os
 import signal
+import shutil
 import sys
-import time
-from typing import Any, Callable, NamedTuple, Optional
+
+from datetime import datetime
+from typing import Any, Callable, NamedTuple, Optional, Sequence
+from zoneinfo import ZoneInfo
 
 
 class Event(NamedTuple):
@@ -30,20 +34,11 @@ class Event(NamedTuple):
 
 
 class Block(dict[str, Any]):
-    instances = 0
-    name = "static"
-
     def __init__(self, on_change: Optional[Callable[[], Any]] = None, **kwargs: Any):
         super().__init__(kwargs)
         self.on_change = on_change
-        self["name"] = type(self).name
-        self["instance"] = str(type(self).instances)
-        type(self).instances += 1
-
-    def __init_subclass__(cls, /, name: str) -> None:
-        super().__init_subclass__()
-        cls.instances = 0
-        cls.name = name
+        self["name"] = type(self).__name__
+        self["instance"] = str(id(self))
 
     def __setitem__(self, key: str, value: Any) -> None:
         dict.__setitem__(self, key, value)
@@ -57,33 +52,67 @@ class Block(dict[str, Any]):
         pass
 
 
-class VolumeBlock(Block, name="volume"):
+class TimeBlock(Block):
+    def __init__(self, fmt: str, zones: Sequence[Optional[ZoneInfo]] = (None,), interval: int = 1, **kwargs):
+        super().__init__(**kwargs)
+        self.fmt = fmt
+        self.interval = interval
+        self.zones, self.current_zone = zones, 0
+        self.task = asyncio.create_task(self.loop())
+
+    def refresh(self) -> None:
+        self["full_text"] = datetime.now(self.zones[self.current_zone]).strftime(self.fmt)
+
+    async def loop(self) -> None:
+        while True:
+            self.refresh()
+            await asyncio.sleep(self.interval)
+
+    async def handle_event(self, event: Event) -> None:
+        if event.button == 1:
+            self.current_zone = (self.current_zone + 1) % len(self.zones)
+        elif event.button == 4:
+            self.current_zone = (self.current_zone - 1) % len(self.zones)
+        elif event.button == 5:
+            self.current_zone = (self.current_zone + 1) % len(self.zones)
+        self.refresh()
+
+    async def destroy(self) -> None:
+        self.task.cancel()
+        await self.task
+
+
+class VolumeBlock(Block):
     @staticmethod
     async def launch_pulsemixer() -> None:
-        await asyncio.create_subprocess_exec(
-            "kitty", "pulsemixer", start_new_session=True
+        await asyncio.create_subprocess_shell(
+            "wezterm start pulsemixer",
+            start_new_session=True,
         )
 
     @staticmethod
     async def toggle_mute() -> None:
-        proc = await asyncio.create_subprocess_shell(
-            "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-        )
-        await proc.wait()
+        await (
+            await asyncio.create_subprocess_shell(
+                "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+            )
+        ).wait()
 
     @staticmethod
     async def increase_volume(amount: int) -> None:
-        proc = await asyncio.create_subprocess_shell(
-            f"wpctl set-volume @DEFAULT_AUDIO_SINK@ {amount}%+"
-        )
-        await proc.wait()
+        await (
+            await asyncio.create_subprocess_shell(
+                f"wpctl set-volume @DEFAULT_AUDIO_SINK@ {amount}%+",
+            )
+        ).wait()
 
     @staticmethod
     async def decrease_volume(amount: int) -> None:
-        proc = await asyncio.create_subprocess_shell(
-            f"wpctl set-volume @DEFAULT_AUDIO_SINK@ {amount}%-"
-        )
-        await proc.wait()
+        await (
+            await asyncio.create_subprocess_shell(
+                f"wpctl set-volume @DEFAULT_AUDIO_SINK@ {amount}%-",
+            )
+        ).wait()
 
     def __init__(self, fmt: str, mute_fmt: str, **kwargs: Any):
         super().__init__(**kwargs)
@@ -92,30 +121,20 @@ class VolumeBlock(Block, name="volume"):
         self.task = asyncio.create_task(self.loop())
 
     async def loop(self) -> None:
-        self.subscription = await asyncio.create_subprocess_shell(
-            "pw-dump -m | jq --unbuffered '.[] | select(.type == \"PipeWire:Interface:Node\") | true'",
+        tracker = await asyncio.create_subprocess_shell(
+            "./volume-tracker.lua",
+            cwd=os.path.dirname(__file__),
             stdout=asyncio.subprocess.PIPE,
         )
 
-        assert self.subscription.stdout is not None
+        assert tracker.stdout is not None
 
-        while not self.subscription.stdout.at_eof():
-            await self.refresh()
-            await self.subscription.stdout.readline()
-
-    async def refresh(self) -> None:
-        proc = await asyncio.create_subprocess_shell(
-            "wpctl get-volume @DEFAULT_AUDIO_SINK@",
-            stdout=asyncio.subprocess.PIPE,
-        )
-
-        stdout, _ = await proc.communicate()
-        _, volume, *muted = stdout.decode().split(" ")
-
-        if muted:
-            self["full_text"] = self.mute_fmt.format(round(float(volume) * 100))
-        else:
-            self["full_text"] = self.fmt.format(round(float(volume) * 100))
+        while not tracker.stdout.at_eof():
+            volume, mute = (await tracker.stdout.readline()).strip().split()
+            if mute == b"true":
+                self["full_text"] = self.mute_fmt.format(round(float(volume) * 100))
+            else:
+                self["full_text"] = self.fmt.format(round(float(volume) * 100))
 
     async def handle_event(self, event: Event) -> None:
         if event.button == 1:
@@ -131,61 +150,68 @@ class VolumeBlock(Block, name="volume"):
         self.task.cancel()
 
 
-class TimeBlock(Block, name="time"):
-    def __init__(self, fmt: str, interval: int = 1, **kwargs: Any):
+class DiskUsage(Block):
+    GB = 1024 ** 3
+
+    def __init__(self, fmt: str, interval: int = 5, path: str = "/", **kwargs: Any):
         super().__init__(**kwargs)
         self.fmt = fmt
         self.interval = interval
+        self.path = path
         self.task = asyncio.create_task(self.loop())
 
     async def loop(self) -> None:
         while True:
-            await asyncio.gather(asyncio.sleep(self.interval), self.refresh())
+            usage = shutil.disk_usage(self.path)
+            self["full_text"] = self.fmt.format(
+                total=usage.total / DiskUsage.GB,
+                used=usage.used / DiskUsage.GB,
+                free=usage.free / DiskUsage.GB,
+                percent_used=100 * usage.used / (usage.used + usage.free),
+                precent_free=100 * usage.free / (usage.used + usage.free),
+            )
 
-    async def refresh(self) -> None:
-        self["full_text"] = time.strftime(self.fmt)
-
-    async def destroy(self) -> None:
-        self.task.cancel()
-        await self.task
+            await asyncio.sleep(self.interval)
 
 
-async def handle_events(reader: asyncio.StreamReader, blocks: list[Block]) -> None:
+async def handle_events(reader: asyncio.StreamReader, blocks: Sequence[Block]) -> None:
+    tasks: set[asyncio.Task] = set()
+
     try:
         await reader.readuntil(b"[")
         while not reader.at_eof():
-            data = await reader.readuntil(b"}")
-            event = Event(**json.loads(data.decode().strip(" ,\n")))
+            data = (await reader.readuntil(b"}")).decode().strip(" ,\n")
+            event = Event(**json.loads(data))
             for block in blocks:
                 if block["name"] == event.name and block["instance"] == event.instance:
-                    asyncio.create_task(block.handle_event(event))
+                    task = asyncio.create_task(block.handle_event(event))
+                    tasks.add(task)
+                    task.add_done_callback(tasks.discard)
     except (asyncio.IncompleteReadError, asyncio.CancelledError):
-        pass
+        for task in tasks:
+            task.cancel()
 
 
 async def main() -> None:
     loop = asyncio.get_running_loop()
 
-    shutdown_event = asyncio.Event()
-    loop.add_signal_handler(signal.SIGTERM, shutdown_event.set)
-    loop.add_signal_handler(signal.SIGINT, shutdown_event.set)
+    shutdown = asyncio.Event()
+    loop.add_signal_handler(signal.SIGTERM, shutdown.set)
+    loop.add_signal_handler(signal.SIGINT, shutdown.set)
 
-    change_event = asyncio.Event()
-    blocks: list[Block] = [
-        VolumeBlock(
-            "墳 {}%",
-            " {}%",
-            on_change=change_event.set,
+    dirty = asyncio.Event()
+    blocks: Sequence[Block] = (
+        DiskUsage(
+            " {used:.1f} GiB ({percent_used:.1f}%)",
+            on_change=dirty.set
         ),
+        VolumeBlock(" {}%", " {}%", on_change=dirty.set),
         TimeBlock(
-            " %a %b %d %Y",
-            on_change=change_event.set,
+            " %a %b %d %Y  %I:%M:%S %p %Z",
+            zones=(None, ZoneInfo("CST6CDT")),
+            on_change=dirty.set,
         ),
-        TimeBlock(
-            " %I:%M:%S %p",
-            on_change=change_event.set,
-        ),
-    ]
+    )
 
     reader = asyncio.StreamReader()
     protocol = asyncio.StreamReaderProtocol(reader)
@@ -195,24 +221,20 @@ async def main() -> None:
     print('{"version": 1, "click_events": true}', flush=True)
     print("[", flush=True)
 
-    pending: set[asyncio.Task] = {
-        event_handler,
-        asyncio.create_task(shutdown_event.wait()),
-    }
-
-    while not (event_handler.done() or shutdown_event.is_set()):
-        change_event.clear()
+    while not (event_handler.done() or shutdown.is_set()):
+        dirty.clear()
         print(json.dumps(blocks), ",", flush=True)
-        _, pending = await asyncio.wait(
-            {*pending, asyncio.create_task(change_event.wait())},
+        await asyncio.wait(
+            {
+                event_handler,
+                asyncio.create_task(shutdown.wait()),
+                asyncio.create_task(dirty.wait())
+            },
             return_when=asyncio.FIRST_COMPLETED,
         )
 
-    for task in pending:
-        task.cancel()
-
     await asyncio.wait(
-        pending | {asyncio.create_task(block.destroy()) for block in blocks}
+        {asyncio.create_task(block.destroy()) for block in blocks},
     )
 
 
