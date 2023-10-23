@@ -17,9 +17,11 @@ mkdir -p "$(dirname "$LESSHISTFILE")"
 export NODE_REPL_HISTORY="${XDG_STATE_HOME:-$HOME/.local/state}/node/histfile"
 mkdir -p "$(dirname "$NODE_REPL_HISTORY")"
 
-export MYPY_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/mypy"
-
 export NPM_CONFIG_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/npm"
+
+export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME:-$HOME/.cache}/python"
+
+export MYPY_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/mypy"
 
 export BROWSER=chromium
 export DIFFPROG="nvim -d"
