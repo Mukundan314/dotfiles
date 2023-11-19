@@ -64,25 +64,34 @@ compinit -d "${XDG_CACHE_DIR:-$HOME/.cache}/zcompdump"
 # Setup aliases {{{
 case "$TERM" in
   "xterm-kitty")
-    alias ssh='kitty +kitten ssh'
-    alias icat='kitty +kitten icat'
+    alias ssh="kitty +kitten ssh"
+    alias icat="kitty +kitten icat"
     ;;
   "wezterm")
-    alias icat='wezterm imgcat'
+    alias icat="wezterm imgcat"
     ;;
 esac
 
-alias grep='grep --color=auto'
-alias ls='ls --color=auto'
+alias grep="grep --color=auto"
+alias ls="ls --color=auto"
 
 alias vi=nvim
 # }}}
 
 # Miscellaneous {{{
 scroll-and-clear-screen() {
-    printf '\n%.0s' {1..$LINES}
+    printf "\n%.0s" {1..$LINES}
     zle clear-screen
 }
 zle -N scroll-and-clear-screen
-bindkey '^l' scroll-and-clear-screen
+bindkey "^l" scroll-and-clear-screen
+
+if [[ "$COLORTERM" == "" ]]; then
+  num_colors="$(tput colors)"
+  if [[ "$num_colors" -ge 256 ]]; then
+    export COLORTERM="truecolor"
+  elif [[ "$num_colors" -ge 8 ]]; then
+    export COLORTERM="256color"
+  fi
+fi
 # }}}
