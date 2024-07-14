@@ -14,6 +14,9 @@ fi
 export LESSHISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/less/histfile"
 mkdir -p "$(dirname "$LESSHISTFILE")"
 
+export SQLITE_HISTORY="${XDG_STATE_HOME:-$HOME/.local/state}/sqlite3/histfile"
+mkdir -p "$(dirname "$SQLITE_HISTORY")"
+
 export NODE_REPL_HISTORY="${XDG_STATE_HOME:-$HOME/.local/state}/node/histfile"
 mkdir -p "$(dirname "$NODE_REPL_HISTORY")"
 
