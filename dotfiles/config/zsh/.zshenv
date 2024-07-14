@@ -26,7 +26,7 @@ export PYTHONPYCACHEPREFIX="${XDG_CACHE_HOME:-$HOME/.cache}/python"
 
 export MYPY_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/mypy"
 
-export BROWSER=chromium
+export BROWSER=firefox-developer-edition
 export DIFFPROG="nvim -d"
 export EDITOR="nvim -e"
 export PAGER=less
