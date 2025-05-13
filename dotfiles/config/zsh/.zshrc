@@ -37,7 +37,8 @@ fpath+=$DOTFILES/dotdrop/completion
 # Load plugins {{{
 fpath=("$ZDOTDIR/plugins/zsh-completions/src" $fpath)
 
-source "$ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+# source "$ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+source "$ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
 
 source "$ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme"
 [[ -f ~/.config/zsh/.p10k.zsh ]] && source ~/.config/zsh/.p10k.zsh

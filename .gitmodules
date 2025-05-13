@@ -52,3 +52,6 @@
 [submodule "dotfiles/config/nvim/pack/plugins/opt/nvim-web-devicons"]
 	path = dotfiles/config/nvim/pack/plugins/opt/nvim-web-devicons
 	url = https://github.com/nvim-tree/nvim-web-devicons.git
+[submodule "dotfiles/config/zsh/plugins/fast-syntax-highlighting"]
+	path = dotfiles/config/zsh/plugins/fast-syntax-highlighting
+	url = https://github.com/zdharma-continuum/fast-syntax-highlighting
