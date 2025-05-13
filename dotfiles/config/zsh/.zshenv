@@ -32,6 +32,9 @@ export EDITOR="nvim -e"
 export PAGER=less
 export VISUAL=nvim
 
+export ASDF_CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/asdf/asdfrc"
+export ASDF_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/asdf"
+
 typeset -U PATH path
-path=("$HOME/bin" "$HOME/go/bin" "$HOME/.local/bin" "$path[@]")
+path=("$HOME/bin" "$ASDF_DATA_DIR/shims" "$HOME/go/bin" "$HOME/.local/bin" "$path[@]")
 export PATH

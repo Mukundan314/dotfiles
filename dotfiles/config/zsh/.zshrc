@@ -44,17 +44,16 @@ source "$ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme"
 [[ -f ~/.config/zsh/.p10k.zsh ]] && source ~/.config/zsh/.p10k.zsh
 
 source "$ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
-
-export ASDF_CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/asdf/asdfrc"
-export ASDF_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/asdf"
-export ASDF_DEFAULT_TOOL_VERSIONS_FILENAME="${XDG_CONFIG_HOME:-$HOME/.config}/asdf/tool-versions"
-export ASDF_NPM_DEFAULT_PACKAGES_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/asdf/default-npm-packages"
-export ASDF_PYTHON_DEFAULT_PACKAGES_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/asdf/default-python-packages"
-source "$ZDOTDIR/plugins/asdf/asdf.sh"
-fpath=("${ASDF_DIR}/completions" $fpath)
 # }}}
 
 # Setup completions {{{
+if [[ ! -d "${ASDF_DATA_DIR}/completions" ]]; then
+  mkdir -p "${ASDF_DATA_DIR}/completions"
+  asdf completion zsh > "${ASDF_DATA_DIR}/completions/_asdf"
+fi
+
+fpath=("${ASDF_DATA_DIR}/completions" $fpath)
+
 autoload -Uz compinit
 compinit -d "${XDG_CACHE_DIR:-$HOME/.cache}/zcompdump"
 

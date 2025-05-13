@@ -40,22 +40,27 @@ dotfiles:
   d_ranger:
     src: config/ranger
     dst: ~/.config/ranger
+  f_tool-versions:
+    src: tool-versions
+    dst: ~/.tool-versions
 profiles:
   lambda.local:
     dotfiles:
-    - d_kitty
-    - f_zshenv
-    - d_zsh
     - d_asdf
+    - d_kitty
     - d_nvim
+    - f_tool-versions
+    - d_zsh
+    - f_zshenv
   sigma:
     dotfiles:
-    - d_kitty
-    - f_zshenv
-    - d_zsh
     - d_asdf
+    - d_kitty
     - d_nvim
-    - d_sway
-    - d_swaylock
-    - d_swayidle
     - d_ranger
+    - d_sway
+    - d_swayidle
+    - d_swaylock
+    - f_tool-versions
+    - d_zsh
+    - f_zshenv
