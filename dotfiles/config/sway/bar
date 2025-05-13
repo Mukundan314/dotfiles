@@ -86,7 +86,7 @@ class VolumeBlock(Block):
     @staticmethod
     async def launch_pulsemixer() -> None:
         await asyncio.create_subprocess_shell(
-            "wezterm start pulsemixer",
+            "kitty pulsemixer",
             start_new_session=True,
         )
 
@@ -148,6 +148,7 @@ class VolumeBlock(Block):
 
     async def destroy(self) -> None:
         self.task.cancel()
+        await self.task
 
 
 class DiskUsage(Block):
@@ -172,6 +173,10 @@ class DiskUsage(Block):
             )
 
             await asyncio.sleep(self.interval)
+
+    async def destroy(self) -> None:
+        self.task.cancel()
+        await self.task
 
 
 async def handle_events(reader: asyncio.StreamReader, blocks: Sequence[Block]) -> None:
@@ -208,7 +213,7 @@ async def main() -> None:
         VolumeBlock(" {}%", " {}%", on_change=dirty.set),
         TimeBlock(
             " %a %b %d %Y  %I:%M:%S %p %Z",
-            zones=(None, ZoneInfo("CST6CDT")),
+            zones=(None, ZoneInfo("America/New_York")),
             on_change=dirty.set,
         ),
     )
