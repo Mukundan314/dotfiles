@@ -10,6 +10,7 @@ config:
   - '*.zwc'
   - '*.so'
   - '*.revision'
+  - '*/.git'
   instignore:
   - '*/.git'
 dotfiles:
