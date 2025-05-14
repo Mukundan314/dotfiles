@@ -231,10 +231,11 @@ bar {
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
     status_command ~/.config/sway/bar
+    separator_symbol '  '
 
     colors {
-        statusline #ffffff
-        background #323232
+        statusline #ffffffdd
+        background #181825dd
         inactive_workspace #32323200 #32323200 #5c5c5c
     }
 }
@@ -247,6 +248,6 @@ bar {
 
     gaps inner 10
 
-xwayland disable
+# xwayland disable
 
 include /etc/sway/config.d/*
