@@ -24,12 +24,16 @@ dotfiles:
   d_zsh:
     src: config/zsh
     dst: ~/.config/zsh
+    instignore: ['*/plugins/*']
+    dir_as_block: ['*/plugins/*']
   d_asdf:
     src: config/asdf
     dst: ~/.config/asdf
   d_nvim:
     src: config/nvim
     dst: ~/.config/nvim
+    instignore: ['*/pack/plugins/opt/*']
+    dir_as_block: ['*/pack/plugins/opt/*']
   d_sway:
     src: config/sway
     dst: ~/.config/sway
